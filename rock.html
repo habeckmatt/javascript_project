@@ -1,43 +1,94 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Page Title</title>
-</head>
-<body>
-  <script>
-    // Your JavaScript goes here!
+let computerScore = 0;
+let userScore = 0;
+const buttons = document.querySelectorAll('.btn');
+const results = document.querySelector('.results');
 
-    var myArray = ['Rock', 'Paper', 'Scissors'];
-    var rand = myArray[Math.floor(Math.random() * myArray.length)];
 
-    function playRound(playerSelection, computerSelection) {
 
-        if (playerSelection == 'Rock' &&computerSelection == 'Scissors') {
-            return "You Win! Rock beats scissors."
-        }else if (computerSelection == 'Paper' && playerSelection == 'Rock'){
-            return "You Lose! Paper beats Rock"
-        }else if (computerSelection == 'Rock' && playerSelection == 'Rock'){
-            return "It's a tie!"
-        }    
+buttons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+        game(e.target.textContent);
+    })
+})
+
+function game(playerPick) {
+    let playerChoice = playerPick.toLowerCase();
+    const computerChoice = computerPlay();
+
+    if (playerChoice !== null) {
+        playRound(playerChoice, computerChoice);
+
+    } else {
+        alert('Please use rock paper or scissors');
+    }
+}
+
+function computerPlay() {
+    const randomNum = Math.floor(Math.random() * 3) + 1
+    return randomNum === 1 ? 'rock' : randomNum === 2 ? 'paper' : 'scissors';
+}
+
+function playRound(playerSelection, computerSelection) {
+
+    const losingMessage = `You have lost! ${computerSelection} beats ${playerSelection}`;
+    const winningMessage = `You have won! ${playerSelection} beats ${computerSelection}`;
+    const tiedMessage = `The game was a tie! ${playerSelection} and ${computerSelection}, try again`;
+    
+
+    if (playerSelection === 'rock') {
+        if (computerSelection === 'scissors') {
+            document.querySelector('.results').textContent = winningMessage;
+            userScore += 1;
+            console.log(userScore)
+            
+        } else if (computerSelection === 'paper') {
+            document.querySelector('.results').textContent = losingMessage;
+            computerScore += 1;
+        } else if (computerSelection === 'rock') {
+            document.querySelector('.results').textContent = tiedMessage;
+        }
+    } else if (playerSelection === 'scissors') {
+        if (computerSelection === 'rock') {
+            document.querySelector('.results').textContent = losingMessage;
+            computerScore += 1;
+        } else if (computerSelection === 'paper') {
+            document.querySelector('.results').textContent = winningMessage;
+            userScore += 1
+        } else if (computerSelection === 'scissors') {
+            document.querySelector('.results').textContent = tiedMessage;
+        }
+    } else if (playerSelection === 'paper') {
+        if (computerSelection === 'rock') {
+            document.querySelector('.results').textContent = winningMessage;
+            userScore += 1;
+        } else if (computerSelection === 'scissors') {
+            document.querySelector('.results').textContent = losingMessage;
+            computerScore += 1;
+        } else if (computerSelection === 'paper') {
+            document.querySelector('.results').textContent = tiedMessage;
+        }
     }
 
-    function computerPlay() {
-        var myArray = ['Rock', 'Paper', 'Scissors'];
-        var rand = myArray[Math.floor(Math.random() * myArray.length)];
-        console.log(`The computer selection is ${rand}`);
-        return rand      
+    checkWinner();
+
+}
+
+function checkWinner() {
+    let winner = userScore > 4 ? 'User!' : 'Computer!'
+    const finalWinnerMessage = `You have won the the best of 5 ${winner}! Game has ended`
+    const para1 = document.createElement('p');
+    const para2 = document.createElement('p');
+
+    para1.textContent = `Player Score ${userScore}`;
+    para2.textContent = `Computer Score ${computerScore}`;
+
+    results.appendChild(para1);
+    results.appendChild(para2);
+
+    if (userScore > 4 ){
+        document.querySelector('.results').textContent = finalWinnerMessage;
+    } else if (computerScore > 4){
+        document.querySelector('.results').textContent = finalWinnerMessage;
     }
-
-    function playerPlay() {
-        var playerChoice = window.prompt("Enter Rock, Paper, or Scissors: ")
-        alert("You've selected " + playerChoice)
-    }
-
-    const playerSelection = playerPlay()
-    const computerSelection = computerPlay()
-    console.log(playRound(playerSelection, computerSelection))
-
-
-  </script>
-</body>
-</html>
+    
+}
